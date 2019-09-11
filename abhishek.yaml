@@ -1,0 +1,32 @@
+---
+- name: create web server
+  hosts: localhost
+  tasks:
+  - name: Install packages 
+    yum:
+      name: httpd
+      state: present
+  - name: editing document root
+    copy:
+      content: 'This is for test purpose!!'
+      dest: /var/www/html/index.html
+  - name: Edit the configuration file
+    copy:
+      src: /root/abhi.conf
+      dest: /etc/httpd/conf.d/abhi.conf 
+  - name: restarting httpd
+    service:
+      name: httpd 
+      state: restarted
+  - name: add port 80 to allow access
+    firewalld:
+      service: http
+      permanent: true
+      state: enabled
+  - name: Reload the firewalld
+    service: 
+      name: firewalld 
+      state: restarted
+  - name: Open Firefox
+    command: firefox http://asheth.pnq.csb
+
